@@ -1,12 +1,24 @@
+import { prisma } from "../../lib/prisma.js";
+
 export async function registerController(req, res) {
-	/* const informacoes = req.body; */
+	const { username, email } = req.body;
 
-	const { user, senha, status } = req.body;
-	const data = {
-		user,
-		senha,
-		status,
-	};
+	const userExists = await prisma.user.findUnique({
+		where: {
+			email,
+		},
+	});
 
-	return res.status(200).send({ data });
+	if (userExists) {
+		return res.status(400).send("Usuário já cadastrado!");
+	}
+
+	await prisma.user.create({
+		data: {
+			name: username,
+			email,
+		},
+	});
+
+	return res.status(201).send("Usuário criado com sucesso!");
 }
