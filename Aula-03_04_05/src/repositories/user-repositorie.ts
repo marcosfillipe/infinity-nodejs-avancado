@@ -11,4 +11,9 @@ export class UserRepositorie {
 		const user = await prisma.user.findUnique({ where: { id: data.id } });
 		return user;
 	}
+
+	async getAll(data: Prisma.UserFindManyArgs) {
+		const users = await prisma.user.findMany(data);
+		return users;
+	}
 }
